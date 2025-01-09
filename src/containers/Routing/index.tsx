@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Navigate, Outlet, Route, Routes as ReactRoutes } from 'react-router-dom';
 import { Routes } from '../../common/enums/routes';
 import MainLayout from '../../layouts/Main';
+import MonthView from '../../scenes/Calendar/MonthView';
+import WeekView from '../../scenes/Calendar/WeekView';
 
 const Routing = () => {
     return (
@@ -8,8 +10,8 @@ const Routing = () => {
             <ReactRoutes>
                 <Route path={Routes.baseUrl} element={<MainLayout />}>
                     <Route index element={<Navigate to={Routes.month} replace />} />
-                    <Route path={Routes.month} element={<div>MONTH</div>} />
-                    <Route path={Routes.week} element={<div>WEEK</div>} />
+                    <Route path={Routes.month} element={<MonthView />} />
+                    <Route path={Routes.week} element={<WeekView />} />
                     <Route path={Routes.events}>
                         <Route
                             index
