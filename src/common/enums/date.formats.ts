@@ -4,5 +4,6 @@ export enum DateFormats {
     fullDate = 'DD MMM YYYY',
     timeOnly = 'HH:mm',
     fullDateTime = 'DD MMM YYYY HH:mm',
-    monthYear = 'MMMM YYYY'
+    monthYear = 'MMMM YYYY',
+    isoDate = 'YYYY-MM-DD'
 }

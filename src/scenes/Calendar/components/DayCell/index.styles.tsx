@@ -1,16 +1,6 @@
 import { Box, styled } from '@mui/material';
 
 export const WrapperStyled = styled(Box)`
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    flex-direction: column;
-    background-color: ${({ theme }) => theme.palette.secondary.main};
-    padding: 5px;
-    color: ${({ theme }) => theme.palette.common.white};
-`;
-
-export const DayCellStyled = styled(Box)`
     padding: 10px;
     background-color: ${({ theme }) => theme.palette.common.white};
     border-radius: 5px;
@@ -20,4 +10,10 @@ export const DayCellStyled = styled(Box)`
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+`;
+
+export const DropAreaStyled = styled(Box)`
+    border-radius: 4px;
+    height: 100%;
+    cursor: pointer;
 `;

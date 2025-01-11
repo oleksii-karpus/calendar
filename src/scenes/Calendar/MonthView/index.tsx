@@ -1,15 +1,23 @@
 import React, { useState } from 'react';
 import dayjs from 'dayjs';
+import { pointerWithin, DndContext, DragOverlay } from '@dnd-kit/core';
 import { getMonthDays, getWeekdayLabels } from '../../../utils/date.utils';
 import { DateNavigator } from '../components/DateNavigator';
 import { WrapperStyled } from '../index.styles';
 import { DateFormats } from '../../../common/enums/date.formats';
-import { DayCellStyled, DaysGridStyled, DaysGridWrapperStyled, WeekdayCellStyled } from './index.styles';
+
+import { useDndTasks } from '../../../hooks/use.dnd.tasks';
+import { TaskCard } from '../components/TaskCard';
+import { WeekdayHeader } from '../components/WeekdayHeader';
+import { useDndSensors } from '../../../hooks/use.dnd.sensors';
+import { DayCellStyled, DaysGridStyled, DaysGridWrapperStyled } from './index.styles';
 
 const weekdays = getWeekdayLabels();
 
 const MonthView: React.FC = () => {
     const [currentDate, setCurrentDate] = useState(dayjs());
+    const { tasks, draggedTask, handleDragStart, handleDragEnd } = useDndTasks();
+    const sensors = useDndSensors();
 
     const year = currentDate.year();
     const month = currentDate.month();
@@ -31,16 +39,30 @@ const MonthView: React.FC = () => {
                 onNext={handleNextMonth}
             />
             <DaysGridWrapperStyled>
-                <DaysGridStyled>
-                    {weekdays.map(day => (
-                        <WeekdayCellStyled key={day}>{day}</WeekdayCellStyled>
-                    ))}
-                    {days.map(({ date, isCurrentMonth }, index) => (
-                        <DayCellStyled isCurrentMonth={isCurrentMonth} key={index}>
-                            {date.date()}
-                        </DayCellStyled>
-                    ))}
-                </DaysGridStyled>
+                <DndContext
+                    sensors={sensors}
+                    collisionDetection={pointerWithin}
+                    onDragStart={handleDragStart}
+                    onDragEnd={handleDragEnd}
+                >
+                    <DaysGridStyled>
+                        <WeekdayHeader weekdays={weekdays} />
+                        {days.map(({ date, isCurrentMonth }) => {
+                            const dayId = date.format(DateFormats.isoDate);
+                            const currentDayTasks = tasks.filter(task => task.date === dayId);
+                            return (
+                                <DayCellStyled
+                                    key={dayId}
+                                    dayId={dayId}
+                                    isCurrentMonth={isCurrentMonth}
+                                    dayNumber={date.date()}
+                                    tasks={currentDayTasks}
+                                />
+                            );
+                        })}
+                    </DaysGridStyled>
+                    <DragOverlay>{draggedTask ? <TaskCard title={draggedTask.title} /> : null}</DragOverlay>
+                </DndContext>
             </DaysGridWrapperStyled>
         </WrapperStyled>
     );

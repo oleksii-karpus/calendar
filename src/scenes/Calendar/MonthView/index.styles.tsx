@@ -1,5 +1,5 @@
 import { Box, BoxProps, styled } from '@mui/material';
-import { DayCellStyled as DayCell } from '../index.styles';
+import { DayCell, DayCellProps } from '../components/DayCell';
 
 export const DaysGridWrapperStyled = styled(Box)`
     display: flex;
@@ -13,15 +13,15 @@ export const DaysGridStyled = styled(Box)`
     gap: 5px;
     width: 100%;
     height: 100%;
+    align-content: start;
 `;
 
-export const WeekdayCellStyled = styled(Box)`
-    font-weight: bold;
-    text-align: center;
-`;
-
-export const DayCellStyled = styled((props: { isCurrentMonth: boolean } & BoxProps) => <DayCell {...props} />, {
-    shouldForwardProp: prop => prop !== 'isCurrentMonth'
-})`
+export const DayCellStyled = styled(
+    (props: { isCurrentMonth: boolean } & BoxProps & DayCellProps) => <DayCell {...props} />,
+    {
+        shouldForwardProp: prop => prop !== 'isCurrentMonth'
+    }
+)`
     opacity: ${({ isCurrentMonth }) => (isCurrentMonth ? '1' : '0.7')};
+    height: 150px;
 `;
