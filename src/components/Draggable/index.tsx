@@ -23,7 +23,7 @@ export const Draggable: FC<Props> = ({ id, children, day, order }) => {
             {...listeners}
             $transform={CSS.Transform.toString(transform)}
             $transition={transition}
-            isOver={isOver}
+            $isOver={isOver}
         >
             {children}
         </WrapperStyled>

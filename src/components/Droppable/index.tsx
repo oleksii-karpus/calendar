@@ -14,7 +14,7 @@ export const Droppable: React.FC<Props> = ({ id, children }) => {
     });
 
     return (
-        <WrapperStyled ref={setNodeRef} isOver={isOver}>
+        <WrapperStyled ref={setNodeRef} $isOver={isOver}>
             {children}
         </WrapperStyled>
     );

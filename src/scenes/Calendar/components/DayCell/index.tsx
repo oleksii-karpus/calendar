@@ -1,35 +1,34 @@
 import { FC } from 'react';
 import { Draggable } from '../../../../components/Draggable';
-import { TaskCard } from '../TaskCard';
+import { EventCard } from '../EventCard';
 import { Droppable } from '../../../../components/Droppable';
-import { Task } from '../../../../common/types/task';
+import { EventsState } from '../../../Events/types/events.state';
 import { DropAreaStyled, WrapperStyled } from './index.styles';
 
 export interface DayCellProps {
     dayId: string;
     dayNumber: number;
-    tasks: Task[];
+    events: EventsState;
     className?: string;
 }
 
-export const DayCell: FC<DayCellProps> = ({ dayId, dayNumber, tasks, className }) => {
-    const globalTasks = tasks.filter(task => task.global);
-    const localTasks = tasks.filter(task => !task.global);
+export const DayCell: FC<DayCellProps> = ({ dayId, dayNumber, events, className }) => {
+    const eventsLength = events.userEvents.length + events.publicHolidays.length;
 
     return (
         <WrapperStyled key={dayId} className={className}>
             <div>
-                {dayNumber} {tasks.length > 0 && `${tasks.length} cards`}
+                {dayNumber} {eventsLength > 0 && `${eventsLength} cards`}
             </div>
-            {globalTasks.map(task => (
-                <TaskCard key={task.id} title={task.title} />
+            {events.publicHolidays.map(event => (
+                <EventCard key={event.id} title={event.title} />
             ))}
-            {localTasks.length > 0 ? (
-                localTasks
+            {events.userEvents.length > 0 ? (
+                events.userEvents
                     .sort((a, b) => a.order - b.order)
-                    .map(task => (
-                        <Draggable key={task.id} id={task.id} day={task.date} order={task.order}>
-                            <TaskCard title={task.title} />
+                    .map(event => (
+                        <Draggable key={event.id} id={event.id} day={event.date} order={event.order}>
+                            <EventCard title={event.title} />
                         </Draggable>
                     ))
             ) : (

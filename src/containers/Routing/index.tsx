@@ -1,10 +1,18 @@
 import { BrowserRouter as Router, Navigate, Outlet, Route, Routes as ReactRoutes } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 import { Routes } from '../../common/enums/routes';
 import MainLayout from '../../layouts/Main';
 import MonthView from '../../scenes/Calendar/MonthView';
 import WeekView from '../../scenes/Calendar/WeekView';
+import { appInitRoutine } from '../../store/app/routines';
+import { AppDispatch } from '../../store';
 
 const Routing = () => {
+    const dispatch: AppDispatch = useDispatch();
+    useEffect(() => {
+        dispatch(appInitRoutine.trigger());
+    }, []);
     return (
         <Router>
             <ReactRoutes>

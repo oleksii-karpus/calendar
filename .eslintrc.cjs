@@ -15,7 +15,7 @@ module.exports = {
   ignorePatterns: ['dist', '.eslintrc.cjs', 'vite.config.ts'],
   parser: '@typescript-eslint/parser',
   "parserOptions": {
-    "project": "./tsconfig.json"
+    "project": ["./tsconfig.app.json", "./tsconfig.node.json"]
   },
   plugins: ['react-refresh', '@typescript-eslint', "prettier"],
   rules: {

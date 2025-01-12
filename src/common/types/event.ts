@@ -1,4 +1,4 @@
-export interface Task {
+export interface Event {
     id: string;
     title: string;
     description?: string;
@@ -6,4 +6,9 @@ export interface Task {
     order: number;
     date: string;
     global?: boolean;
+}
+
+export interface EventWithUpdateStatus {
+    isEventUpdated: boolean;
+    event: Event;
 }
