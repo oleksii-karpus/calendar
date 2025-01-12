@@ -6,17 +6,17 @@ export const updatePublicHolidays = (state: EventsState, events: Event[]): Event
     publicHolidays: events
 });
 
-export const updateUserEvents = (state: EventsState, events: Event[]): EventsState => {
-    const updatedEventsMap = events.reduce(
-        (acc, event) => {
-            acc[event.id] = event;
-            return acc;
-        },
-        {} as Record<string, Event>
-    );
+export const createUserEvent = (state: EventsState, event: Event): EventsState => ({
+    ...state,
+    userEvents: [...state.userEvents, event]
+});
 
-    return {
-        ...state,
-        userEvents: state.userEvents.map(event => updatedEventsMap[event.id] || event)
-    };
-};
+export const deleteUserEvent = (state: EventsState, id: string): EventsState => ({
+    ...state,
+    userEvents: state.userEvents.filter(event => event.id !== id)
+});
+
+export const setUserEvents = (state: EventsState, events: Event[]): EventsState => ({
+    ...state,
+    userEvents: events
+});

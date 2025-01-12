@@ -4,7 +4,7 @@ export const useDndSensors = () => {
     return useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
-                delay: 70,
+                delay: 150,
                 tolerance: 10
             }
         })
