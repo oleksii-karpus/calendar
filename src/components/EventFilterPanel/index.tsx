@@ -22,9 +22,9 @@ import {
 } from './index.styles';
 
 type Props = {
-    label: string;
-    onPrev: () => void;
-    onNext: () => void;
+    label?: string;
+    onPrev?: () => void;
+    onNext?: () => void;
     className?: string;
     disableDateNavigator?: boolean;
     onSearchChange?: (value: string) => void;

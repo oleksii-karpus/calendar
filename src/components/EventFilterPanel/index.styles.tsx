@@ -39,6 +39,7 @@ export const TitleStyled = styled(Typography)`
 
 export const SearchWrapperStyled = styled(Box)`
     flex: 1 1 20%;
+    max-width: 40%;
 `;
 
 export const SearchStyled = styled('div')(({ theme }) => ({

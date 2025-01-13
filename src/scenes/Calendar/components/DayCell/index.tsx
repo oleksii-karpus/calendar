@@ -1,9 +1,10 @@
-import { FC, useRef, useState, MouseEvent } from 'react';
+import { FC } from 'react';
 import { Draggable } from '../../../../components/Draggable';
 import { EventCard } from '../../../../components/EventCard';
 import { Droppable } from '../../../../components/Droppable';
 import { EventPopover } from '../../../Events/EventPopover';
-import { Event, EventPopoverMode, FilteredEvents, NewEvent } from '../../../../common/types/event';
+import { FilteredEvents } from '../../../../common/types/event';
+import { useEventPopover } from '../../../../hooks/use.event.popover';
 import { CardsCountStyled, DayHeaderStyled, DayNumberStyled, DropAreaStyled, WrapperStyled } from './index.styles';
 
 export interface DayCellProps {
@@ -18,22 +19,19 @@ export interface DayCellProps {
 
 export const DayCell: FC<DayCellProps> = ({ dayId, dayNumber, events, className }) => {
     const eventsLength = events.userEvents.length + events.publicHolidays.length;
-    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-    const [mode, setMode] = useState<EventPopoverMode>('view');
-    const dayCellRef = useRef<HTMLDivElement | null>(null);
-    const [popoverData, setPopoverData] = useState<Event | null | NewEvent>(null);
 
-    const handleEventClick = (e: MouseEvent<HTMLElement>, userEvent: Event) => {
-        e.stopPropagation();
-        setMode(() => (userEvent.global ? 'view' : 'edit'));
-        setAnchorEl(dayCellRef.current);
-        setPopoverData(userEvent);
-    };
+    const {
+        anchorEl,
+        popoverData,
+        mode,
+        handleEventClick,
+        handleClose,
+        handleCreateClick,
+        refElement: dayCellRef
+    } = useEventPopover();
 
-    const handleDayClick = () => {
-        setAnchorEl(dayCellRef.current);
-        setMode('create');
-        setPopoverData({
+    const onCreate = () => {
+        handleCreateClick({
             date: dayId,
             description: '',
             order: events.userEvents.length + 1,
@@ -42,14 +40,9 @@ export const DayCell: FC<DayCellProps> = ({ dayId, dayNumber, events, className 
         });
     };
 
-    const handleClose = () => {
-        setPopoverData(null);
-        setAnchorEl(null);
-    };
-
     return (
         <WrapperStyled key={dayId} className={className} ref={dayCellRef}>
-            <DayHeaderStyled onClick={handleDayClick}>
+            <DayHeaderStyled onClick={onCreate}>
                 <DayNumberStyled>{dayNumber}</DayNumberStyled>{' '}
                 {eventsLength > 0 && (
                     <CardsCountStyled>
@@ -78,7 +71,7 @@ export const DayCell: FC<DayCellProps> = ({ dayId, dayNumber, events, className 
                     ))
             ) : (
                 <Droppable id={dayId}>
-                    <DropAreaStyled onClick={handleDayClick} />
+                    <DropAreaStyled onClick={onCreate} />
                 </Droppable>
             )}
             <EventPopover

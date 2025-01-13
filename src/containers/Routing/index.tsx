@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Navigate, Outlet, Route, Routes as ReactRoutes } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Route, Routes as ReactRoutes } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { Routes } from '../../common/enums/routes';
@@ -7,6 +7,7 @@ import MonthView from '../../scenes/Calendar/MonthView';
 import WeekView from '../../scenes/Calendar/WeekView';
 import { appInitRoutine } from '../../store/app/routines';
 import { AppDispatch } from '../../store';
+import Events from '../../scenes/Events';
 
 const Routing = () => {
     const dispatch: AppDispatch = useDispatch();
@@ -21,15 +22,7 @@ const Routing = () => {
                     <Route path={Routes.month} element={<MonthView />} />
                     <Route path={Routes.week} element={<WeekView />} />
                     <Route path={Routes.events}>
-                        <Route
-                            index
-                            element={
-                                <>
-                                    <div>EVENT LIST</div>
-                                    <Outlet />
-                                </>
-                            }
-                        />
+                        <Route index element={<Events />} />
                         <Route path=":id">
                             <Route index element={<div>EVENT PAGE</div>} />
                             <Route path="edit" element={<div>EDIT EVENT PAGE</div>} />

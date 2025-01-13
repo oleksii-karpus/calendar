@@ -1,4 +1,4 @@
-import { Popover } from '@mui/material';
+import { Popover, PopoverOrigin } from '@mui/material';
 import { FC } from 'react';
 import { Event, EventPopoverMode, NewEvent } from '../../../common/types/event';
 import { useEventActions } from '../../../hooks/use.event.actions';
@@ -10,9 +10,19 @@ interface EventPopoverProps {
     open: boolean;
     mode?: EventPopoverMode;
     event: Event | NewEvent | null;
+    anchorOrigin?: PopoverOrigin | undefined;
+    transformOrigin?: PopoverOrigin | undefined;
 }
 
-export const EventPopover: FC<EventPopoverProps> = ({ anchorEl, onClose, open, mode = 'view', event }) => {
+export const EventPopover: FC<EventPopoverProps> = ({
+    anchorEl,
+    onClose,
+    open,
+    mode = 'view',
+    event,
+    anchorOrigin,
+    transformOrigin
+}) => {
     const { updateEvent, createEvent, deleteEvent } = useEventActions();
 
     const updateEventHandler = (data: Event) => {
@@ -38,8 +48,8 @@ export const EventPopover: FC<EventPopoverProps> = ({ anchorEl, onClose, open, m
             open={open}
             anchorEl={anchorEl}
             onClose={onClose}
-            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-            transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+            anchorOrigin={anchorOrigin ? anchorOrigin : { vertical: 'top', horizontal: 'right' }}
+            transformOrigin={transformOrigin ? transformOrigin : { vertical: 'top', horizontal: 'left' }}
         >
             {eventPopoverFactory({
                 mode,
