@@ -1,10 +1,10 @@
 import { FC, useRef, useState, MouseEvent } from 'react';
 import { Draggable } from '../../../../components/Draggable';
-import { EventCard } from '../EventCard';
+import { EventCard } from '../../../../components/EventCard';
 import { Droppable } from '../../../../components/Droppable';
 import { EventPopover } from '../../../Events/EventPopover';
 import { Event, EventPopoverMode, FilteredEvents, NewEvent } from '../../../../common/types/event';
-import { DropAreaStyled, WrapperStyled } from './index.styles';
+import { CardsCountStyled, DayHeaderStyled, DayNumberStyled, DropAreaStyled, WrapperStyled } from './index.styles';
 
 export interface DayCellProps {
     dayId: string;
@@ -37,7 +37,7 @@ export const DayCell: FC<DayCellProps> = ({ dayId, dayNumber, events, className 
             date: dayId,
             description: '',
             order: events.userEvents.length + 1,
-            priority: undefined,
+            priority: 'medium',
             title: 'New Event'
         });
     };
@@ -49,19 +49,17 @@ export const DayCell: FC<DayCellProps> = ({ dayId, dayNumber, events, className 
 
     return (
         <WrapperStyled key={dayId} className={className} ref={dayCellRef}>
-            <div role="presentation" onClick={handleDayClick}>
-                {dayNumber} {eventsLength > 0 && `${eventsLength} cards`}
-            </div>
+            <DayHeaderStyled onClick={handleDayClick}>
+                <DayNumberStyled>{dayNumber}</DayNumberStyled>{' '}
+                {eventsLength > 0 && (
+                    <CardsCountStyled>
+                        {eventsLength} {eventsLength === 1 ? 'event' : 'events'}
+                    </CardsCountStyled>
+                )}
+            </DayHeaderStyled>
             {events.publicHolidays.map(event => (
-                <div
-                    key={event.id}
-                    role="presentation"
-                    onClick={e => handleEventClick(e, event)}
-                    style={{
-                        opacity: event.hidden ? '0.1' : '1'
-                    }}
-                >
-                    <EventCard title={event.title} />
+                <div key={event.id} role="presentation" onClick={e => handleEventClick(e, event)}>
+                    <EventCard title={event.title} global={event.global} hidden={event.hidden} />
                 </div>
             ))}
             {events.userEvents.length > 0 ? (
@@ -75,14 +73,7 @@ export const DayCell: FC<DayCellProps> = ({ dayId, dayNumber, events, className 
                             order={event.order}
                             onClick={e => handleEventClick(e, event)}
                         >
-                            <div
-                                style={{
-                                    opacity: event.hidden ? '0.1' : '1',
-                                    pointerEvents: event.hidden ? 'none' : 'all'
-                                }}
-                            >
-                                <EventCard title={event.title} />
-                            </div>
+                            <EventCard title={event.title} priority={event.priority} hidden={event.hidden} />
                         </Draggable>
                     ))
             ) : (

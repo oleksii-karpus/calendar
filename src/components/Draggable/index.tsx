@@ -12,7 +12,7 @@ type Props = {
 };
 
 export const Draggable: FC<Props> = ({ id, children, day, order, onClick }) => {
-    const { attributes, listeners, setNodeRef, transform, transition, isOver } = useSortable({
+    const { attributes, listeners, setNodeRef, transform, transition, isOver, isDragging } = useSortable({
         id,
         data: { id, day, order }
     });
@@ -30,6 +30,7 @@ export const Draggable: FC<Props> = ({ id, children, day, order, onClick }) => {
             $transform={CSS.Transform.toString(transform)}
             $transition={transition}
             $isOver={isOver}
+            $isDragging={isDragging}
             onClick={handleClick}
         >
             {children}

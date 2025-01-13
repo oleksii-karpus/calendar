@@ -5,7 +5,7 @@ import { EventFilterPanel } from '../../../components/EventFilterPanel';
 import { WrapperStyled } from '../index.styles';
 import { DateFormats } from '../../../common/enums/date.formats';
 import { useDndHandlers } from '../../../hooks/use.dnd.handlers';
-import { EventCard } from '../components/EventCard';
+import { EventCard } from '../../../components/EventCard';
 import { WeekdayHeader } from '../components/WeekdayHeader';
 import { useDndSensors } from '../../../hooks/use.dnd.sensors';
 import { useDateManager } from '../../../hooks/use.date.manager';

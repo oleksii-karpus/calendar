@@ -4,7 +4,7 @@ import { getWeekDays } from '../../../utils/date.utils';
 import { EventFilterPanel } from '../../../components/EventFilterPanel';
 import { WrapperStyled } from '../index.styles';
 import { DateFormats } from '../../../common/enums/date.formats';
-import { EventCard } from '../components/EventCard';
+import { EventCard } from '../../../components/EventCard';
 import { DayCell } from '../components/DayCell';
 import { useDndSensors } from '../../../hooks/use.dnd.sensors';
 import { useDndHandlers } from '../../../hooks/use.dnd.handlers';

@@ -1,8 +1,10 @@
+export type EventPriority = 'low' | 'medium' | 'high';
+
 export interface Event {
     id: string;
     title: string;
     description?: string;
-    priority?: 'low' | 'medium' | 'high';
+    priority?: EventPriority;
     order: number;
     date: string;
     global?: boolean;
@@ -21,31 +23,33 @@ export interface FilteredEvents extends Event {
 
 export type EventPopoverMode = 'create' | 'edit' | 'view';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const isEvent = (obj: any): obj is Event => {
+export const isEvent = (obj: unknown): obj is Event => {
+    if (typeof obj !== 'object' || obj === null) return false;
+
+    const event = obj as Record<string, unknown>;
+
     return (
-        typeof obj === 'object' &&
-        obj !== null &&
-        typeof obj.id === 'string' &&
-        typeof obj.title === 'string' &&
-        typeof obj.order === 'number' &&
-        typeof obj.date === 'string' &&
-        (typeof obj.description === 'undefined' || typeof obj.description === 'string') &&
-        (typeof obj.priority === 'undefined' || ['low', 'medium', 'high'].includes(obj.priority)) &&
-        (typeof obj.global === 'undefined' || typeof obj.global === 'boolean')
+        typeof event.id === 'string' &&
+        typeof event.title === 'string' &&
+        typeof event.order === 'number' &&
+        typeof event.date === 'string' &&
+        (typeof event.description === 'undefined' || typeof event.description === 'string') &&
+        (typeof event.priority === 'undefined' || ['low', 'medium', 'high'].includes(event.priority as string)) &&
+        (typeof event.global === 'undefined' || typeof event.global === 'boolean')
     );
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const isNewEvent = (obj: any): obj is NewEvent => {
+export const isNewEvent = (obj: unknown): obj is NewEvent => {
+    if (typeof obj !== 'object' || obj === null) return false;
+
+    const newEvent = obj as Record<string, unknown>;
+
     return (
-        typeof obj === 'object' &&
-        obj !== null &&
-        typeof obj.title === 'string' &&
-        typeof obj.order === 'number' &&
-        typeof obj.date === 'string' &&
-        (typeof obj.description === 'undefined' || typeof obj.description === 'string') &&
-        (typeof obj.priority === 'undefined' || ['low', 'medium', 'high'].includes(obj.priority)) &&
-        (typeof obj.global === 'undefined' || typeof obj.global === 'boolean')
+        typeof newEvent.title === 'string' &&
+        typeof newEvent.order === 'number' &&
+        typeof newEvent.date === 'string' &&
+        (typeof newEvent.description === 'undefined' || typeof newEvent.description === 'string') &&
+        (typeof newEvent.priority === 'undefined' || ['low', 'medium', 'high'].includes(newEvent.priority as string)) &&
+        (typeof newEvent.global === 'undefined' || typeof newEvent.global === 'boolean')
     );
 };

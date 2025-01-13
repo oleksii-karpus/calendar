@@ -1,7 +1,6 @@
 import { NewEvent, Event, isEvent, isNewEvent, EventPopoverMode } from '../../../common/types/event';
 import { ViewEvent } from '../components/ViewEvent';
-import { EditEvent } from '../components/EditEvent';
-import { CreateEvent } from '../components/CreateEvent';
+import { EventForm } from '../components/EventForm';
 
 type Props = {
     mode: EventPopoverMode;
@@ -15,12 +14,12 @@ export const eventPopoverFactory = ({ mode, event, onUpdate, onCreate, onDelete 
     switch (mode) {
         case 'create':
             if (isNewEvent(event)) {
-                return <CreateEvent event={event} onSave={onCreate} />;
+                return <EventForm event={event} onCreate={onCreate} />;
             }
             return null;
         case 'edit':
             if (isEvent(event)) {
-                return <EditEvent event={event} onSave={onUpdate} onDelete={onDelete} />;
+                return <EventForm event={event} onUpdate={onUpdate} onDelete={onDelete} />;
             }
             return null;
         case 'view':
