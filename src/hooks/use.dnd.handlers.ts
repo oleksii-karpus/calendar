@@ -9,9 +9,8 @@ import { getEventsState } from '../utils/get.state.utils';
 import { updateUserEventsRoutine } from '../scenes/Events/store/routines';
 import { AppDispatch } from '../store';
 
-export const useDndEvents = () => {
+export const useDndHandlers = () => {
     const dispatch: AppDispatch = useDispatch();
-    const publicHolidays = useSelector((rootState: RootState) => getEventsState(rootState).publicHolidays);
     const userEvents = useSelector((rootState: RootState) => getEventsState(rootState).userEvents);
     const [draggedEvent, setDraggedEvent] = useState<Event | null>(null);
 
@@ -59,10 +58,6 @@ export const useDndEvents = () => {
     };
 
     return {
-        events: {
-            publicHolidays,
-            userEvents
-        },
         draggedEvent,
         handleDragStart,
         handleDragEnd

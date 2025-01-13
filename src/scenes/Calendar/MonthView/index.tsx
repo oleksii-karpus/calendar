@@ -1,23 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { pointerWithin, DndContext, DragOverlay } from '@dnd-kit/core';
 import { getMonthDays, getWeekdayLabels } from '../../../utils/date.utils';
-import { DateNavigator } from '../components/DateNavigator';
+import { EventFilterPanel } from '../../../components/EventFilterPanel';
 import { WrapperStyled } from '../index.styles';
 import { DateFormats } from '../../../common/enums/date.formats';
-import { useDndEvents } from '../../../hooks/use.dnd.events';
+import { useDndHandlers } from '../../../hooks/use.dnd.handlers';
 import { EventCard } from '../components/EventCard';
 import { WeekdayHeader } from '../components/WeekdayHeader';
 import { useDndSensors } from '../../../hooks/use.dnd.sensors';
 import { useDateManager } from '../../../hooks/use.date.manager';
+import { useFilteredEvents } from '../../../hooks/use.filtered.events';
 import { DayCellStyled, DaysGridStyled, DaysGridWrapperStyled } from './index.styles';
 
 const weekdays = getWeekdayLabels();
 
 const MonthView: React.FC = () => {
-    const { events, draggedEvent, handleDragStart, handleDragEnd } = useDndEvents();
     const sensors = useDndSensors();
     const { currentDate, currentYear, currentMonth, updateDate } = useDateManager();
     const days = getMonthDays(currentYear, currentMonth);
+    const { draggedEvent, handleDragStart, handleDragEnd } = useDndHandlers();
+    const [searchString, setSearchString] = useState('');
+    const { events } = useFilteredEvents(searchString);
+
     const handlePrevMonth = () => {
         updateDate(currentDate.subtract(1, 'month'));
     };
@@ -28,10 +32,12 @@ const MonthView: React.FC = () => {
 
     return (
         <WrapperStyled>
-            <DateNavigator
+            <EventFilterPanel
                 label={currentDate.format(DateFormats.monthYear)}
                 onPrev={handlePrevMonth}
                 onNext={handleNextMonth}
+                searchQuery={searchString}
+                onSearchChange={query => setSearchString(query)}
             />
             <DaysGridWrapperStyled>
                 <DndContext
@@ -45,14 +51,14 @@ const MonthView: React.FC = () => {
                         {days.map(({ date, isCurrentMonth }) => {
                             const dayId = date.format(DateFormats.isoDate);
                             const userEvents = events.userEvents.filter(event => event.date === dayId);
-                            const publicEvents = events.publicHolidays.filter(event => event.date === dayId);
+                            const publicHolidays = events.publicHolidays.filter(event => event.date === dayId);
                             return (
                                 <DayCellStyled
                                     key={dayId}
                                     dayId={dayId}
                                     isCurrentMonth={isCurrentMonth}
                                     dayNumber={date.date()}
-                                    events={{ publicHolidays: publicEvents, userEvents }}
+                                    events={{ publicHolidays, userEvents }}
                                 />
                             );
                         })}

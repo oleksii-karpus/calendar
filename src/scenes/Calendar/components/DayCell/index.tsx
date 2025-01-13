@@ -2,15 +2,17 @@ import { FC, useRef, useState, MouseEvent } from 'react';
 import { Draggable } from '../../../../components/Draggable';
 import { EventCard } from '../EventCard';
 import { Droppable } from '../../../../components/Droppable';
-import { EventsState } from '../../../Events/types/events.state';
 import { EventPopover } from '../../../Events/EventPopover';
-import { Event, EventPopoverMode, NewEvent } from '../../../../common/types/event';
+import { Event, EventPopoverMode, FilteredEvents, NewEvent } from '../../../../common/types/event';
 import { DropAreaStyled, WrapperStyled } from './index.styles';
 
 export interface DayCellProps {
     dayId: string;
     dayNumber: number;
-    events: EventsState;
+    events: {
+        userEvents: FilteredEvents[];
+        publicHolidays: FilteredEvents[];
+    };
     className?: string;
 }
 
@@ -51,7 +53,14 @@ export const DayCell: FC<DayCellProps> = ({ dayId, dayNumber, events, className 
                 {dayNumber} {eventsLength > 0 && `${eventsLength} cards`}
             </div>
             {events.publicHolidays.map(event => (
-                <div key={event.id} role="presentation" onClick={e => handleEventClick(e, event)}>
+                <div
+                    key={event.id}
+                    role="presentation"
+                    onClick={e => handleEventClick(e, event)}
+                    style={{
+                        opacity: event.hidden ? '0.1' : '1'
+                    }}
+                >
                     <EventCard title={event.title} />
                 </div>
             ))}
@@ -66,7 +75,14 @@ export const DayCell: FC<DayCellProps> = ({ dayId, dayNumber, events, className 
                             order={event.order}
                             onClick={e => handleEventClick(e, event)}
                         >
-                            <EventCard title={event.title} />
+                            <div
+                                style={{
+                                    opacity: event.hidden ? '0.1' : '1',
+                                    pointerEvents: event.hidden ? 'none' : 'all'
+                                }}
+                            >
+                                <EventCard title={event.title} />
+                            </div>
                         </Draggable>
                     ))
             ) : (

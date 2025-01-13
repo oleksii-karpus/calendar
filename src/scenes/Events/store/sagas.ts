@@ -3,7 +3,7 @@ import { all, call, put, select, takeLatest } from 'redux-saga/effects';
 import { eventService } from '../../../services/event';
 import { Event } from '../../../common/types/event';
 import { getCalendarState } from '../../../utils/get.state.utils';
-import { updateYearRoutine } from '../../Calendar/store/routines';
+import { updateCountryCodeRoutine, updateYearRoutine } from '../../Calendar/store/routines';
 import { AppResponse } from '../../../common/types/app.response';
 import {
     createUserEventsRoutine,
@@ -27,7 +27,10 @@ function* getPublicHolidaysHandler() {
 }
 
 function* watchGetPublicHolidays() {
-    yield takeLatest([getPublicHolidaysRoutine.trigger, updateYearRoutine.success], getPublicHolidaysHandler);
+    yield takeLatest(
+        [getPublicHolidaysRoutine.trigger, updateYearRoutine.success, updateCountryCodeRoutine.success],
+        getPublicHolidaysHandler
+    );
 }
 
 function* updateUserEventsHandler({ payload }: Action<Event[]>) {

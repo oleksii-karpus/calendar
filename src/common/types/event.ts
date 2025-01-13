@@ -15,6 +15,10 @@ export interface EventWithUpdateStatus {
 
 export type NewEvent = Omit<Event, 'id'>;
 
+export interface FilteredEvents extends Event {
+    hidden?: boolean;
+}
+
 export type EventPopoverMode = 'create' | 'edit' | 'view';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

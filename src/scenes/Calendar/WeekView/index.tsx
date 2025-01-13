@@ -1,20 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { pointerWithin, DndContext, DragOverlay } from '@dnd-kit/core';
 import { getWeekDays } from '../../../utils/date.utils';
-import { DateNavigator } from '../components/DateNavigator';
+import { EventFilterPanel } from '../../../components/EventFilterPanel';
 import { WrapperStyled } from '../index.styles';
 import { DateFormats } from '../../../common/enums/date.formats';
 import { EventCard } from '../components/EventCard';
 import { DayCell } from '../components/DayCell';
 import { useDndSensors } from '../../../hooks/use.dnd.sensors';
-import { useDndEvents } from '../../../hooks/use.dnd.events';
+import { useDndHandlers } from '../../../hooks/use.dnd.handlers';
 import { useDateManager } from '../../../hooks/use.date.manager';
+import { useFilteredEvents } from '../../../hooks/use.filtered.events';
 import { WeekWrapperStyled } from './index.styles';
 
 const WeekView: React.FC = () => {
-    const { events, draggedEvent, handleDragStart, handleDragEnd } = useDndEvents();
+    const { draggedEvent, handleDragStart, handleDragEnd } = useDndHandlers();
     const sensors = useDndSensors();
     const { currentWeekStart, updateDate } = useDateManager();
+    const [searchString, setSearchString] = useState('');
+    const { events } = useFilteredEvents(searchString);
 
     const changeWeek = (direction: 'prev' | 'next') => {
         const newWeekStart =
@@ -32,12 +35,14 @@ const WeekView: React.FC = () => {
 
     return (
         <WrapperStyled>
-            <DateNavigator
+            <EventFilterPanel
                 label={`${currentWeekStart.format(DateFormats.shortDate)} - ${currentWeekStart
                     .add(6, 'day')
                     .format(DateFormats.fullDate)}`}
                 onPrev={handlePrevWeek}
                 onNext={handleNextWeek}
+                searchQuery={searchString}
+                onSearchChange={query => setSearchString(query)}
             />
             <DndContext
                 sensors={sensors}

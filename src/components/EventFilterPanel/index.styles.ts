@@ -2,8 +2,13 @@ import { Box, Button, styled, Typography } from '@mui/material';
 
 export const WrapperStyled = styled(Box)`
     display: flex;
-    justify-content: center;
+    align-items: center;
     margin-bottom: 10px;
+`;
+
+export const DateNavigatorStyled = styled(Box)`
+    display: flex;
+    justify-content: center;
     width: 100%;
 `;
 
