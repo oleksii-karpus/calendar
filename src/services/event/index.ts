@@ -68,12 +68,10 @@ class EventService {
         if (!oldEventDay) {
             throw new Error(`Failed to update event: event with ID ${activeEvent.id} does not exist.`);
         }
-
         const updatedEvents =
             oldEventDay === activeEvent.date
                 ? this.#updateSameDayEvent(userEvents, activeEvent)
                 : this.#updateDifferentDayEvent(userEvents, activeEvent, oldEventDay);
-
         this.#saveUserEventsToStorage(updatedEvents);
         return { data: updatedEvents };
     }
@@ -84,14 +82,18 @@ class EventService {
 
     #updateDifferentDayEvent(userEvents: Event[], activeEvent: Event, oldEventDay: string): Event[] {
         const targetEvent = userEvents.find(event => event.date === activeEvent.date && event.order === 1);
-
         if (!targetEvent) {
+            const newEventDate = activeEvent.date;
+            const editedEvent = {
+                ...activeEvent,
+                date: oldEventDay
+            };
             return userEvents.map(userEvent => {
                 const { isEventUpdated, event } = moveEventToEmptyDay(
                     userEvent,
-                    activeEvent.id,
-                    activeEvent,
-                    activeEvent.date
+                    editedEvent.id,
+                    editedEvent,
+                    newEventDate
                 );
                 return isEventUpdated && event ? event : userEvent;
             });
