@@ -21,6 +21,12 @@ export interface FilteredEvents extends Event {
     hidden?: boolean;
 }
 
+export interface EventDndData {
+    activeEvent: Event;
+    targetEvent: Event | null;
+    targetDayId: string;
+}
+
 export type EventPopoverMode = 'create' | 'edit' | 'view';
 
 export const isEvent = (obj: unknown): obj is Event => {

@@ -1,14 +1,8 @@
 import { Routine } from 'redux-saga-routines';
 import { ReducerHandlers } from '../../../store/types/reducer.handlers';
 import { EventsState } from '../types/events.state';
-import {
-    createUserEventsRoutine,
-    getPublicHolidaysRoutine,
-    updateUserEventsRoutine,
-    deleteUserEventsRoutine,
-    getUserEventsRoutine
-} from './routines';
-import { createUserEvent, deleteUserEvent, setUserEvents, updatePublicHolidays } from './handlers';
+import { getPublicHolidaysRoutine, updateUserEventsRoutine, getUserEventsRoutine } from './routines';
+import { setUserEvents, updatePublicHolidays } from './handlers';
 
 const initialState: EventsState = {
     publicHolidays: [],
@@ -18,8 +12,6 @@ const initialState: EventsState = {
 const handlers: ReducerHandlers<EventsState> = {
     [getPublicHolidaysRoutine.SUCCESS]: updatePublicHolidays,
     [updateUserEventsRoutine.SUCCESS]: setUserEvents,
-    [createUserEventsRoutine.SUCCESS]: createUserEvent,
-    [deleteUserEventsRoutine.SUCCESS]: deleteUserEvent,
     [getUserEventsRoutine.SUCCESS]: setUserEvents
 };
 

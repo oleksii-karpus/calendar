@@ -1,7 +1,7 @@
 import { Action } from 'redux-actions';
 import { all, call, put, select, takeLatest } from 'redux-saga/effects';
 import { eventService } from '../../../services/event';
-import { Event } from '../../../common/types/event';
+import { Event, EventDndData } from '../../../common/types/event';
 import { getCalendarState } from '../../../utils/get.state.utils';
 import { updateCountryCodeRoutine, updateYearRoutine } from '../../Calendar/store/routines';
 import { AppResponse } from '../../../common/types/app.response';
@@ -10,6 +10,7 @@ import {
     deleteUserEventsRoutine,
     getPublicHolidaysRoutine,
     getUserEventsRoutine,
+    moveUserEventsRoutine,
     updateUserEventsRoutine
 } from './routines';
 
@@ -33,7 +34,7 @@ function* watchGetPublicHolidays() {
     );
 }
 
-function* updateUserEventsHandler({ payload }: Action<Event[]>) {
+function* updateUserEventsHandler({ payload }: Action<Event>) {
     try {
         const { data }: AppResponse<Event[]> = yield call([eventService, eventService.updateUserEvent], payload);
         yield put(updateUserEventsRoutine.success(data));
@@ -48,8 +49,8 @@ function* watchUpdateUserEvents() {
 
 function* createUserEventHandler({ payload }: Action<Event>) {
     try {
-        const { data }: AppResponse<Event> = yield call([eventService, eventService.createUserEvent], payload);
-        yield put(createUserEventsRoutine.success(data));
+        yield call([eventService, eventService.createUserEvent], payload);
+        yield put(getUserEventsRoutine.trigger());
     } catch (error) {
         console.error(error);
     }
@@ -62,7 +63,7 @@ function* watchCreateUserEvent() {
 function* deleteUserEventHandler({ payload }: Action<string>) {
     try {
         yield call([eventService, eventService.deleteUserEvent], payload);
-        yield put(deleteUserEventsRoutine.success(payload));
+        yield put(getUserEventsRoutine.trigger());
     } catch (error) {
         console.error(error);
     }
@@ -85,12 +86,26 @@ function* watchGetUserEvents() {
     yield takeLatest(getUserEventsRoutine.trigger, getUserEventsHandler);
 }
 
+function* moveUserEventHandler({ payload }: Action<EventDndData>) {
+    try {
+        const { data }: AppResponse<Event[]> = yield call([eventService, eventService.moveUserEvent], payload);
+        yield put(updateUserEventsRoutine.success(data));
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function* watchMoveUserEvent() {
+    yield takeLatest(moveUserEventsRoutine.trigger, moveUserEventHandler);
+}
+
 export default function* EventSaga() {
     yield all([
         watchGetPublicHolidays(),
         watchUpdateUserEvents(),
         watchCreateUserEvent(),
         watchDeleteUserEvent(),
-        watchGetUserEvents()
+        watchGetUserEvents(),
+        watchMoveUserEvent()
     ]);
 }

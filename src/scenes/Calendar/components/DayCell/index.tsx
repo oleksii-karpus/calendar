@@ -42,7 +42,7 @@ export const DayCell: FC<DayCellProps> = ({ dayId, dayNumber, events, className 
 
     return (
         <WrapperStyled key={dayId} className={className} ref={dayCellRef}>
-            <DayHeaderStyled onClick={onCreate}>
+            <DayHeaderStyled onClick={onCreate} title="create new event">
                 <DayNumberStyled>{dayNumber}</DayNumberStyled>{' '}
                 {eventsLength > 0 && (
                     <CardsCountStyled>
@@ -59,19 +59,13 @@ export const DayCell: FC<DayCellProps> = ({ dayId, dayNumber, events, className 
                 events.userEvents
                     .sort((a, b) => a.order - b.order)
                     .map(event => (
-                        <Draggable
-                            key={event.id}
-                            id={event.id}
-                            day={event.date}
-                            order={event.order}
-                            onClick={e => handleEventClick(e, event)}
-                        >
+                        <Draggable key={event.id} userEvent={event} onClick={e => handleEventClick(e, event)}>
                             <EventCard title={event.title} priority={event.priority} hidden={event.hidden} />
                         </Draggable>
                     ))
             ) : (
                 <Droppable id={dayId}>
-                    <DropAreaStyled onClick={onCreate} />
+                    <DropAreaStyled onClick={onCreate} title="create new event" />
                 </Droppable>
             )}
             <EventPopover

@@ -21,7 +21,7 @@ export const useEventActions = (): EventActions => {
     };
 
     const updateEvent = (data: Event) => {
-        dispatch(updateUserEventsRoutine.trigger([data]));
+        dispatch(updateUserEventsRoutine.trigger(data));
     };
 
     const deleteEvent = (id: string) => {

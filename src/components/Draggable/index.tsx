@@ -1,25 +1,24 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { FC, ReactNode, MouseEvent } from 'react';
+import { Event } from '../../common/types/event';
 import { WrapperStyled } from './index.styles';
 
 type Props = {
-    id: string;
     children: ReactNode;
-    day: string;
-    order: number;
     onClick: (event: MouseEvent<HTMLElement>, id: string) => void;
+    userEvent: Event;
 };
 
-export const Draggable: FC<Props> = ({ id, children, day, order, onClick }) => {
+export const Draggable: FC<Props> = ({ children, onClick, userEvent }) => {
     const { attributes, listeners, setNodeRef, transform, transition, isOver, isDragging } = useSortable({
-        id,
-        data: { id, day, order }
+        id: userEvent.id,
+        data: userEvent
     });
 
     const handleClick = (event: MouseEvent<HTMLDivElement>) => {
         event.stopPropagation();
-        onClick(event, id);
+        onClick(event, userEvent.id);
     };
 
     return (

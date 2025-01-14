@@ -2,11 +2,9 @@ import { useState } from 'react';
 import { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { Event } from '../common/types/event';
-import { DragItemData } from '../common/types/drag.item.data';
-import { moveEventToEmptyDay, reorderOrMoveEvent } from '../utils/event.dnd.operations';
 import { RootState } from '../store/types/root.state';
 import { getEventsState } from '../utils/get.state.utils';
-import { updateUserEventsRoutine } from '../scenes/Events/store/routines';
+import { moveUserEventsRoutine } from '../scenes/Events/store/routines';
 import { AppDispatch } from '../store';
 
 export const useDndHandlers = () => {
@@ -26,35 +24,17 @@ export const useDndHandlers = () => {
         setDraggedEvent(null);
         if (!over || !active?.data?.current) return;
 
-        const activeEvent = active.data.current as DragItemData;
-        const activeEventId = String(active.id);
-        const targetEvent = over.data.current as DragItemData;
+        const activeEvent = active.data.current as Event;
+        const targetEvent = over.data.current as Event | null;
         const targetDayId = String(over.id);
-        if (!targetEvent) {
-            const updatedEvents = userEvents.reduce((acc: Event[], userEvent) => {
-                const { isEventUpdated, event } = moveEventToEmptyDay(
-                    userEvent,
-                    activeEventId,
-                    activeEvent,
-                    targetDayId
-                );
-                if (isEventUpdated && event) {
-                    acc.push(event);
-                }
-                return acc;
-            }, []);
-            dispatch(updateUserEventsRoutine.trigger(updatedEvents));
-            return;
-        }
 
-        const updatedEvents = userEvents.reduce((acc: Event[], userEvent) => {
-            const { isEventUpdated, event } = reorderOrMoveEvent(userEvent, targetEvent, activeEvent);
-            if (isEventUpdated && event) {
-                acc.push(event);
-            }
-            return acc;
-        }, []);
-        dispatch(updateUserEventsRoutine.trigger(updatedEvents));
+        dispatch(
+            moveUserEventsRoutine.trigger({
+                activeEvent,
+                targetEvent,
+                targetDayId
+            })
+        );
     };
 
     return {

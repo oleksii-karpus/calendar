@@ -1,14 +1,9 @@
 import { Event, EventWithUpdateStatus } from '../common/types/event';
-import { DragItemData } from '../common/types/drag.item.data';
 
-export const reorderOrMoveEvent = (
-    event: Event,
-    targetEvent: DragItemData,
-    activeEvent: DragItemData
-): EventWithUpdateStatus => {
-    const isTheSameDay = activeEvent.day === targetEvent.day;
-    const prevDate = activeEvent.day;
-    if ((prevDate !== event.date && targetEvent.day !== event.date) || event.global) {
+export const reorderOrMoveEvent = (event: Event, targetEvent: Event, activeEvent: Event): EventWithUpdateStatus => {
+    const isTheSameDay = activeEvent.date === targetEvent.date;
+    const prevDate = activeEvent.date;
+    if ((prevDate !== event.date && targetEvent.date !== event.date) || event.global) {
         return {
             isEventUpdated: false,
             event
@@ -17,12 +12,12 @@ export const reorderOrMoveEvent = (
     const actions = {
         [targetEvent.id]: {
             ...event,
-            date: targetEvent.day,
+            date: targetEvent.date,
             order: isTheSameDay ? activeEvent.order : event.order + 1
         },
         [activeEvent.id]: {
             ...event,
-            date: targetEvent.day,
+            date: targetEvent.date,
             order: isTheSameDay ? targetEvent.order : 1
         },
         default: {
@@ -41,10 +36,13 @@ export const reorderOrMoveEvent = (
 export const moveEventToEmptyDay = (
     event: Event,
     activeEventId: string,
-    activeEvent: DragItemData,
-    targetDayId: string
+    activeEvent: Event,
+    targetDayId: string | null
 ): EventWithUpdateStatus => {
-    const prevDate = activeEvent.day;
+    if (!targetDayId) {
+        throw new Error('target day id is missing');
+    }
+    const prevDate = activeEvent.date;
     const prevOrder = activeEvent.order;
     const isTheSameDay = event.date === targetDayId;
     if ((event.date !== prevDate && !isTheSameDay) || event.global) {
