@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import dayjs from 'dayjs';
 import { Container } from '@mui/material';
 import { useFilteredEvents } from '../../hooks/use.filtered.events';
@@ -19,7 +19,8 @@ import {
 import { EventPopover } from './EventPopover';
 
 const Events = () => {
-    const { events } = useFilteredEvents('');
+    const [searchString, setSearchString] = useState('');
+    const { events } = useFilteredEvents(searchString);
     const allEvents = [...events.publicHolidays, ...events.userEvents].sort(
         (a, b) => dayjs(a.date).valueOf() - dayjs(b.date).valueOf()
     );
@@ -36,7 +37,11 @@ const Events = () => {
 
     return (
         <WrapperStyled>
-            <EventFilterPanel searchQuery="" onSearchChange={() => {}} disableDateNavigator />
+            <EventFilterPanel
+                searchQuery={searchString}
+                onSearchChange={query => setSearchString(query)}
+                disableDateNavigator
+            />
             <Container>
                 <NewEventStyled
                     role="presentation"
